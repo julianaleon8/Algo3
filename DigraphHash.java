@@ -124,7 +124,24 @@ public class DigraphHash extends Digraph {
      * destino. Si el vertice no existe, retorna null.
      */
     public  List<Edge> getInEdges(String node){
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        //throw new UnsupportedOperationException("Not supported yet.");
+        List<Node> Prede = new MyList<Node>();
+        List<Edge> ListPrede = new MyList<Edge>();
+       
+        Prede = getPreds(node);
+        ListIterator<Node> iteradorNode = Prede.iterator();
+        while (iteradorNode.hasNext()){
+        
+        String Nodo = iteradorNode.next().toString();
+        Edge Arco;
+        Arco = new Edge(Nodo,node); 
+        ListPrede.add(Arco);
+        
+        
+        }
+        return ListPrede;
+        
     }
 
     /*
@@ -132,7 +149,22 @@ public class DigraphHash extends Digraph {
      * origen. Si el vertice no existe, retorna null.
      */
     public  List<Edge> getOutEdges(String node){
-        throw new UnsupportedOperationException("Not supported yet.");
+   //     throw new UnsupportedOperationException("Not supported yet.");
+         List<Node> Suce = new MyList<Node>();
+        List<Edge> ListSuce = new MyList<Edge>();
+       
+        Suce = getSucs(node);
+        ListIterator<Node> iteradorNode = Suce.iterator();
+        while (iteradorNode.hasNext()){
+        
+        String Nodo = iteradorNode.next().toString();
+        Edge Arco;
+        Arco = new Edge(node ,Nodo); 
+        ListSuce.add(Arco);
+        
+        
+        }
+        return ListSuce;
     }
 
     /*
