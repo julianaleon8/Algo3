@@ -10,7 +10,7 @@
 		 * con un centinela.
 		 * La primera "caja" esta vacia.
 		 *
-		 * http://es.wikipedia.org/wiki/Lista_(informática)#Nodos_Centinelas
+		 * http://es.wikipedia.org/wiki/Lista_(informï¿½tica)#Nodos_Centinelas
 		 */
 		 
 		//public MyList<E> cent = new MyList<E>();
@@ -92,12 +92,19 @@
 		 */
 		public boolean equals(List<E> list){
 		//throw new UnsupportedOperationException("Not supported yet.");
+                if (this == null && list == null)
+                                 return true;
+                if (this != null && list == null)
+                    return false;
+                if (this == null && list != null)
+                    return false;
 		if (this.tam != list.getSize()) {
-		return false;
+                    return false;
 		} else {
 		boolean esIgual = true;
 		ListIterator<E> iter1 = this.iterator();
 		ListIterator<E> iter2 = list.iterator();
+                
 		while(iter1.hasNext()){
 		esIgual = iter1.next().equals(iter2.next());
 		}
@@ -144,6 +151,7 @@
 		 */
 		public int getSize(){
 		//throw new UnsupportedOperationException("Not supported yet.");
+                    //System.out.println("HOLA SOY EL TAMANO" + this.tam);
 		return this.tam;
 		}
 

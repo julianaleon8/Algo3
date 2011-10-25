@@ -59,8 +59,8 @@ public class MyHashTable<E> implements HashTable<E> {
         }
 
         classes[pos].add(element);
+        System.out.println("Agregue en la pos" + pos);
         //int decimal = Integer.parseInt(hashCode(element), base);
-        System.out.println("	HASH	" + pos);
         return true;
     }
 
@@ -70,6 +70,7 @@ public class MyHashTable<E> implements HashTable<E> {
      */
     public void clear() {
         //throw new UnsupportedOperationException("Not supported yet.");
+        classes = new List[tam];
     }
 
     /**
@@ -80,7 +81,22 @@ public class MyHashTable<E> implements HashTable<E> {
      * @see java.lang.Cloneable
      */
     public Object clone() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // throw new UnsupportedOperationException("Not supported yet.");
+        MyHashTable<E> tablaHash = new MyHashTable<E>(tam);
+        for (int i = 0; i < tam; i++) {
+            if (this.classes[i] != null) {
+                tablaHash.classes[i] = new MyList<E>();
+                ListIterator<E> iterador = this.classes[i].iterator();
+                int j = 0;
+                while (iterador.hasNext()) {
+                    tablaHash.classes[i].add(iterador.next());
+
+                    //System.out.println("Elemento de la lista " + j + this.classes[i].getElem(j).toString());
+                    j++;
+                }
+            }
+        }
+        return tablaHash;
     }
 
     /**
@@ -93,7 +109,18 @@ public class MyHashTable<E> implements HashTable<E> {
      *
      */
     public boolean contains(Object o) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        int i = 0;
+        boolean esta = false;
+        while (i < tam && !esta) {
+            if (this.classes[i] != null && this.classes[i].contains(o)) {
+                esta = true;
+            } else {
+                i++;
+            }
+        }
+        return esta;
+
     }
 
     /**
@@ -106,7 +133,37 @@ public class MyHashTable<E> implements HashTable<E> {
      *
      */
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        boolean igual = true;
+        MyHashTable<E> tabla = (MyHashTable) o;
+        if (!(o instanceof MyHashTable)) {
+            return false;
+        } else {
+            if (this.tam != tabla.tam) {
+                return false;
+            } else {
+
+                int i = 0;
+                while (i < this.tam && igual) {
+                    if (this.classes[i] == null && tabla.classes[i] == null) {
+                        i++;
+                    } else if (this.classes[i] == null && tabla.classes[i] != null) {
+                        igual = false;
+                    } else if (this.classes[i] != null && tabla.classes[i] == null) {
+                        igual = false;
+                    } else if (!this.classes[i].equals(tabla.classes[i])) {
+                        igual = false;
+                    } else {
+                        i++;
+                    }
+                }
+
+            }
+
+        }
+        return igual;
+
+
     }
 
     /**
@@ -120,7 +177,21 @@ public class MyHashTable<E> implements HashTable<E> {
         //throw new UnsupportedOperationException("Not supported yet.");
         int pos = hashCode(e);
         pos = pos & 0x7fffffff % tam;
-        return classes[pos].getElem(0);
+        int i = 0;
+        boolean found = false;
+        while (i < classes[pos].getSize() & !found) {
+            if (classes[pos].getElem(i).toString().equals(e)) {
+                found = true;
+            } else {
+                i++;
+            }
+        }
+        if (found) {
+            return classes[pos].getElem(i);
+        } else {
+            return null;
+        }
+        //return classes[pos].getElem(0);
     }
 
     /**
@@ -129,7 +200,8 @@ public class MyHashTable<E> implements HashTable<E> {
      * @return true si size() &eq; 0. falso en caso contrario
      */
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        return size() == 0;
     }
 
     /**
@@ -140,7 +212,23 @@ public class MyHashTable<E> implements HashTable<E> {
      * null
      */
     public E remove(String e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        int pos = hashCode(e);
+        pos = pos & 0x7fffffff % tam;
+        E element = this.get(e);
+        ListIterator<E> iterador = this.classes[pos].iterator();
+        boolean found = false;
+        while (iterador.hasNext() && !found) {
+            if (iterador.next().equals(element)) {
+                found = true;
+                iterador.unlink();
+            }
+
+        }
+         if (found)
+           return element;
+       else
+           return null;
     }
 
     /**
@@ -149,7 +237,16 @@ public class MyHashTable<E> implements HashTable<E> {
      * @return el numero de elementos en la tabla
      */
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        int tamano = 0;
+        for (int i = 0; i < tam; i++) {
+            if (this.classes[i] != null) {
+                tamano = tamano + this.classes[i].getSize();
+            }
+
+        }
+
+        return tamano;
     }
 
     /**
@@ -159,8 +256,19 @@ public class MyHashTable<E> implements HashTable<E> {
      * @return an array of the elements from this {@code MyHashTable}.
      */
     public Object[] toArray() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        //throw new UnsupportedOperationException("Not supported yet.");
+        Object arreglo[] = new Object[this.size()];
+        int j = 0;
+        for (int i = 0; i < this.tam; i++){
+            if (this.classes[i] != null){
+                for (int h = 0; h < this.classes[i].getSize(); h++){
+                    arreglo[j] = this.classes[i].getElem(h);
+                    j++;
+                }
+            }
+        }
+        return arreglo;
+       }
 
     /**
      * Retorna la representacion en String de esta {@code tabla}
@@ -169,7 +277,22 @@ public class MyHashTable<E> implements HashTable<E> {
      */
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        String str = "";
+        for (int i = 0; i < this.tam; i++) {
+            if (this.classes[i] != null) {
+                ListIterator<E> iterador = this.classes[i].iterator();
+                int j = 0;
+
+                while (iterador.hasNext()) {
+                    str = str.concat(iterador.next().toString());
+                    str = str.concat("\n");
+                    j++;
+                }
+                //str = str.concat("\n");
+            }
+        }
+        return str;
     }
 }
 
